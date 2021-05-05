@@ -52,7 +52,7 @@ while (mines.length < minesQty) {
         mines.push(randomMine);
     }
 }
-console.log(mines);
+
 //user try prompt
 while (tries.length < maxTries && gameOver == false) {
 
