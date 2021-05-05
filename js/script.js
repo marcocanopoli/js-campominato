@@ -19,69 +19,64 @@ var tries = [];
 var randomMine;
 var userTry;
 var maxTries;
-var maxMines = 100;
+var difficulty = 0;
+var triesCounter = 1;
+var minesRange = 100;
 var minesQty = 16;
 var gameOver = false;
-var counter = 1;
-var difficulty = 0;
 
 // choose difficulty
-difficulty = parseInt(prompt("Scegliere la difficoltà:\n0 - Facile\n1 - Medio\n2 - Difficile"));
+difficulty = parseInt(prompt("Scegliere la difficoltà da 0 a 2:\n0 (Facile)\n1 (Medio)\n2 (Difficile)"));
 
 switch (difficulty) {
 
     case 0:
-        maxMines = 100;
         break;
     case 1:
-        maxMines = 80;
+        minesRange = 80;
         break;
     case 2:
-        maxMines = 50;
-        break; 
+        minesRange = 50;
+        break;
     default:
         alert("Difficolta' facile impostata per default");
 }
 
-maxTries = maxMines - minesQty;
+maxTries = minesRange - minesQty;
 
 //fill mines array
-for (var i = 0; i < minesQty; i++) {
+while (mines.length < minesQty) {
+    randomMine = getRandomNumber(1, minesRange);
 
-    do {
-        randomMine = getRandomNumber(1, maxMines);
-    } while (mines.includes(randomMine));
-
-    mines.push(randomMine);
+    if (!mines.includes(randomMine)) {
+        mines.push(randomMine);
+    }
 }
-console.log("Posizione mine:", mines);
-
-//user attempt prompt
+console.log(mines);
+//user try prompt
 while (tries.length < maxTries && gameOver == false) {
 
     do {
-        userTry = parseInt(prompt("Tentativo #" + counter + ": Inserisci un numero!"));        
-    } while (isNaN(userTry) || userTry < 1 || userTry > maxMines || tries.includes(userTry));
+        userTry = parseInt(prompt("Tentativo #" + triesCounter + ": Inserisci un numero!"));        
+    } while (isNaN(userTry) || userTry < 1 || userTry > minesRange || tries.includes(userTry));
     
     if (mines.includes(userTry)) {
-        tries.push(userTry);
         gameOver = true;        
     }
-    else {
-        tries.push(userTry);
-        counter++;        
-    }
-    console.log(tries.length);
+
+    tries.push(userTry);
+    triesCounter++;        
 }
 
+//game results with points
 if (gameOver == true) {    
-    alert("HAI PERSO!\nHai totalizzato " + (counter - 1) + " punti!");
+    alert("HAI PERSO!\nSei esploso alla posizione " + userTry + " \nHai totalizzato " + (triesCounter - 1) + " punti!");
 } else if (tries.length == maxTries) {
-    alert("Raggiunto il numero massimo di " + maxTries + " tentativi, HAI VINTO!\nHai totalizzato " + (counter - 1) + " punti!");
+    alert("HAI VINTO!\nHai raggiunto il numero massimo di " + maxTries + " tentativi\nHai totalizzato " + (triesCounter - 1) + " punti!");
 }
-console.log("Tentativi:", tries);
 
 //---------- FUNCTIONS ------------//
+//returns random int in specified range
 function getRandomNumber (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
